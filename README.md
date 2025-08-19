@@ -1,4 +1,5 @@
 # ESP32-CAM Advanced Control Panel
+<img width="1341" height="1176" alt="Screenshot" src="https://github.com/user-attachments/assets/937d8db0-abba-4833-8b24-286c3968f47a" />
 
 A professional-grade web interface for ESP32-CAM with advanced camera controls, real-time streaming, and multi-client support.
 
