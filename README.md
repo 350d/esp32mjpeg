@@ -269,12 +269,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - PlatformIO development team
 - ESP32-CAM community contributors
 
-## 📞 Support
-
-- 🐛 **Issues**: [GitHub Issues](https://github.com/yourusername/esp32-cam-advanced-control/issues)
-- 💬 **Discussions**: [GitHub Discussions](https://github.com/yourusername/esp32-cam-advanced-control/discussions)
-- 📧 **Email**: your.email@example.com
-
 ---
 
 **Made with ❤️ for the ESP32 community**
