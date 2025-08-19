@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>ESP32-CAM Control Panel</title>
+    <link rel='stylesheet' href='/css/main.css?t={{TIMESTAMP}}'>
+</head>
+<body>
+    <div class='container'>
+        <div class='header'>
+            <h1>ESP32-CAM Control Panel</h1>
+            <p>Real-time streaming with camera controls</p>
+        </div>
+        <div class='status-bar' id='status'>Status: Loading...</div>
+        
+        <div class='stream-container'>
+            <div class='stream-wrapper'>
+                <img id='stream' class='stream-img' src='/mjpeg/1' alt='Camera Stream'>
+            </div>
+        </div>
+        
+        <div class='controls-grid'>
+            <!-- Image Quality Panel -->
+            <div class='control-panel'>
+                <h3>Image Quality</h3>
+                <div class='control-group'>
+                    <label for='quality'>JPEG Quality: <span class='range-value' id='qualityVal'>{{QUALITY}}</span></label>
+                    <input type='range' id='quality' min='4' max='63' value='{{QUALITY}}' data-value='{{QUALITY}}' autocomplete='off' onchange='setControl("quality",this.value)'>
+                </div>
+                <div class='control-group'>
+                    <label for='brightness'>Brightness: <span class='range-value' id='brightnessVal'>{{BRIGHTNESS}}</span></label>
+                    <input type='range' id='brightness' min='-2' max='2' value='{{BRIGHTNESS}}' data-value='{{BRIGHTNESS}}' autocomplete='off' onchange='setControl("brightness",this.value)'>
+                </div>
+                <div class='control-group'>
+                    <label for='contrast'>Contrast: <span class='range-value' id='contrastVal'>{{CONTRAST}}</span></label>
+                    <input type='range' id='contrast' min='-2' max='2' value='{{CONTRAST}}' data-value='{{CONTRAST}}' autocomplete='off' onchange='setControl("contrast",this.value)'>
+                </div>
+                <div class='control-group'>
+                    <label for='saturation'>Saturation: <span class='range-value' id='saturationVal'>{{SATURATION}}</span></label>
+                    <input type='range' id='saturation' min='-2' max='2' value='{{SATURATION}}' data-value='{{SATURATION}}' autocomplete='off' onchange='setControl("saturation",this.value)'>
+                </div>
+            </div>
+            
+            <!-- Exposure & Gain Panel -->
+            <div class='control-panel'>
+                <h3>Exposure & Gain</h3>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='aec' data-value='{{AEC}}' onchange='setControl("aec", this.checked?1:0)'> Auto Exposure Control</label>
+                </div>
+                <div class='control-group'>
+                    <label for='ae_level'>AE Level: <span class='range-value' id='ae_levelVal'>{{AE_LEVEL}}</span></label>
+                    <input type='range' id='ae_level' min='-2' max='2' step='1' value='{{AE_LEVEL}}' data-value='{{AE_LEVEL}}' autocomplete='off' onchange='setControl("ae_level",this.value)'>
+                </div>
+                <div class='control-group'>
+                    <label for='aec_value'>AEC Value: <span class='range-value' id='aec_valueVal'>{{AEC_VALUE}}</span></label>
+                    <input type='range' id='aec_value' min='0' max='1200' value='{{AEC_VALUE}}' data-value='{{AEC_VALUE}}' autocomplete='off' onchange='setControl("aec_value",this.value)'>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='aec2' data-value='{{AEC2}}' onchange='setControl("aec2", this.checked?1:0)'> AEC2 (DSP)</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='agc' data-value='{{AGC}}' onchange='setControl("agc", this.checked?1:0)'> Auto Gain Control</label>
+                </div>
+                <div class='control-group'>
+                    <label for='agc_gain'>AGC Gain: <span class='range-value' id='agc_gainVal'>{{AGC_GAIN}}</span></label>
+                    <input type='range' id='agc_gain' min='0' max='30' value='{{AGC_GAIN}}' data-value='{{AGC_GAIN}}' autocomplete='off' onchange='setControl("agc_gain",this.value)'>
+                </div>
+                <div class='control-group'>
+                    <label for='gainceiling'>Gain Ceiling:</label>
+                    <select id='gainceiling' data-value='{{GAINCEILING}}' onchange='setControl("gainceiling",this.value)'>
+                        <option value='0'>2x</option>
+                        <option value='1'>4x</option>
+                        <option value='2'>8x</option>
+                        <option value='3'>16x</option>
+                        <option value='4'>32x</option>
+                        <option value='5'>64x</option>
+                        <option value='6'>128x</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- White Balance & Color Panel -->
+            <div class='control-panel'>
+                <h3>White Balance & Color</h3>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='awb' data-value='{{AWB}}' onchange='setControl("awb", this.checked?1:0)'> Auto White Balance</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='awb_gain' data-value='{{AWB_GAIN}}' onchange='setControl("awb_gain", this.checked?1:0)'> AWB Gain</label>
+                </div>
+                <div class='control-group'>
+                    <label for='wb_mode'>WB Mode:</label>
+                    <select id='wb_mode' data-value='{{WB_MODE}}' onchange='setControl("wb_mode",this.value)'>
+                        <option value='0'>Auto</option>
+                        <option value='1'>Sunny</option>
+                        <option value='2'>Cloudy</option>
+                        <option value='3'>Office</option>
+                        <option value='4'>Home</option>
+                    </select>
+                </div>
+                <div class='control-group'>
+                    <label for='special_effect'>Special Effect:</label>
+                    <select id='special_effect' data-value='{{SPECIAL_EFFECT}}' onchange='setControl("special_effect",this.value)'>
+                        <option value='0'>No Effect</option>
+                        <option value='1'>Negative</option>
+                        <option value='2'>Grayscale</option>
+                        <option value='3'>Red Tint</option>
+                        <option value='4'>Green Tint</option>
+                        <option value='5'>Blue Tint</option>
+                        <option value='6'>Sepia</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Orientation & Geometry Panel -->
+            <div class='control-panel'>
+                <h3>Orientation & Geometry</h3>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='hmirror' data-value='{{HMIRROR}}' onchange='setControl("hmirror", this.checked?1:0)'> Horizontal Mirror</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='vflip' data-value='{{VFLIP}}' onchange='setControl("vflip", this.checked?1:0)'> Vertical Flip</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='dcw' data-value='{{DCW}}' onchange='setControl("dcw", this.checked?1:0)'> DCW (Downsize)</label>
+                </div>
+            </div>
+            
+            <!-- Image Processing Panel -->
+            <div class='control-panel'>
+                <h3>Image Processing</h3>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='bpc' data-value='{{BPC}}' onchange='setControl("bpc", this.checked?1:0)'> Bad Pixel Correction</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='wpc' data-value='{{WPC}}' onchange='setControl("wpc", this.checked?1:0)'> White Pixel Correction</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='raw_gma' data-value='{{RAW_GMA}}' onchange='setControl("raw_gma", this.checked?1:0)'> Gamma Correction</label>
+                </div>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='lenc' data-value='{{LENC}}' onchange='setControl("lenc", this.checked?1:0)'> Lens Correction</label>
+                </div>
+            </div>
+            
+            <!-- Debug & Test Panel -->
+            <div class='control-panel'>
+                <h3>Debug & Test</h3>
+                <div class='control-group'>
+                    <label><input type='checkbox' id='colorbar' data-value='{{COLORBAR}}' onchange='setControl("colorbar", this.checked?1:0)'> Color Bar Test</label>
+                </div>
+            </div>
+        </div>
+
+                    <!-- System Controls Panel -->
+                    <div class='control-panel'>
+                        <h3>System Controls</h3>
+                        <button class='btn' onclick='clearSettings()'>Clear Settings</button>
+                        <button class='btn btn-danger' onclick='rebootCamera()'>Reboot Camera</button>
+                    </div>
+    </div>
+    
+    <script src='/js/controls.js?t={{TIMESTAMP}}'></script>
+    <script src='/js/status.js?t={{TIMESTAMP}}'></script>
+</body>
+</html>
